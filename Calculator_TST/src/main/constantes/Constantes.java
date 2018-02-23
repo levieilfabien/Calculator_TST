@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.openqa.selenium.By;
 
+import main.outils.PropertiesOutil;
+
 /**
  * Ensemble des constantes manipulées par les tests.
  * On favoriserais en temps normal la mise à disposition des données de type URL dans un fichier properties extérieur.
@@ -14,13 +16,13 @@ import org.openqa.selenium.By;
 public class Constantes {
 	
 	//////////////////////////////////////////////////// INFORMATIONS TECHNIQUES FIREFOX  ////////////////////////////////////////////////////////////////
-	public static final String EMPLACEMENT_FIREFOX = "C:\\Users\\levieilfa\\AppData\\Local\\Mozilla Firefox\\firefox.exe";
-	public static final String EMPLACEMENT_PROFIL_FIREFOX = "C:\\Users\\levieilfa\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\Automate";
-	public static final String EMPLACEMENT_GECKO_DRIVER =  System.setProperty("webdriver.gecko.driver", "C:\\Users\\levieilfa\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\geckodriver64bit.exe");
+	public static final String EMPLACEMENT_FIREFOX = PropertiesOutil.getInfoConstante("EMPLACEMENT_FIREFOX");
+	public static final String EMPLACEMENT_PROFIL_FIREFOX = PropertiesOutil.getInfoConstante("EMPLACEMENT_PROFIL_FIREFOX");
+	public static final String EMPLACEMENT_GECKO_DRIVER =  System.setProperty("webdriver.gecko.driver", PropertiesOutil.getInfoConstante("EMPLACEMENT_GECKO_DRIVER"));
 	
 	////////////////////////////////////////////////////INFORMATIONS TECHNIQUES CHROME  ////////////////////////////////////////////////////////////////
-	public static final String EMPLACEMENT_CHROME = "C:\\work\\apps\\Chrome\\Application\\chrome.exe";
-	public static final String EMPLACEMENT_CHROME_DRIVER = System.setProperty("webdriver.chrome.driver", "C:\\work\\apps\\Chrome\\Application\\chromedriver.exe");
+	public static final String EMPLACEMENT_CHROME = PropertiesOutil.getInfoConstante("EMPLACEMENT_CHROME");
+	public static final String EMPLACEMENT_CHROME_DRIVER = System.setProperty("webdriver.chrome.driver", PropertiesOutil.getInfoConstante("EMPLACEMENT_CHROME_DRIVER"));
 	
 	////////////////////////////////////////////////////AUTRES INFORMATIONS TECHNIQUES  ////////////////////////////////////////////////////////////////
 	public static final String DATE_JOUR_YYYY_MM_DD = new SimpleDateFormat("yyyy_MM_dd").format(new Date());
@@ -28,11 +30,23 @@ public class Constantes {
 	public static final int USE_CHROME = 2;
 	
 	//////////////////////////////////////////////////// INFORMATIONS RELATIVES AUX TESTS ////////////////////////////////////////////////////////////	
-	public static final String URL_PAGE = "http://tests.qa.weborama.com/calculator/";
+	public static final String URL_PAGE = PropertiesOutil.getInfoConstante("URL_PAGE_CALCULATOR");
 	public static final String TITRE_PAGE = "Calculator";
 	
+	// Les différents types d'opération
+	public static final String OPERATION_PAR_DEFAUT = "";
+	public static final String OPERATION_SOMME = "sum";
+	public static final String OPERATION_SOUSTRACTION = "substract";
+	public static final String OPERATION_MULTIPLICATION = "multiply";
+	public static final String OPERATION_DIVISION = "divide";
+	
+	// Chaines de caractères présentes dans l'IHM
+	public static final String PREFIXE_DERNIER_RESULTAT = "Last result";
+	
+	// Les locateurs des éléments manipulés par les tests
 	public static final By CHAMP_NUMERO_A = new By.ByName("numbera");
 	public static final By CHAMP_NUMERO_B = new By.ByXPath(".//*[@*='Fill the number B']");
 	public static final By SELECT_OPERATION = new By.ById("operation");
 	public static final By VALIDER_FORMULAIRE_CALCUL = new By.ByXPath(".//form[@*='myCompute']//input[@*='submit']");
+	public static final By DERNIER_RESULTAT = new By.ByXPath(".//fieldset[1]//p");
 }

@@ -7,12 +7,24 @@
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>
-				<directory>src/resources</directory>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<!-- override the destination directory for this resource -->
+				<targetPath>resources</targetPath>
+				<!-- enable filtering -->
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/properties</exclude>
+				</excludes>
 			</resource>
 		</resources>
 		<testResources>
 			<testResource>
-				<directory>src/resources</directory>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
 			</testResource>
 		</testResources>
 		<plugins>
