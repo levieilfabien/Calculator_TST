@@ -30,8 +30,10 @@ public class Constantes {
 	public static final int USE_CHROME = 2;
 	
 	//////////////////////////////////////////////////// INFORMATIONS RELATIVES AUX TESTS ////////////////////////////////////////////////////////////	
-	public static final String URL_PAGE = PropertiesOutil.getInfoConstante("URL_PAGE_CALCULATOR");
-	public static final String TITRE_PAGE = "Calculator";
+	public static final String URL_PAGE_CALCULATOR = PropertiesOutil.getInfoConstante("URL_PAGE_CALCULATOR");
+	public static final String TITRE_PAGE_CALCULATOR = "Calculator";
+	public static final String URL_PAGE_PHOTOMANAGER = PropertiesOutil.getInfoConstante("URL_PAGE_DRAGDROP");
+	public static final String TITRE_PAGE_PHOTOMANAGER = "Drag and Drop Demo Sites | Testing Site - GlobalSQA";
 	
 	// Les différents types d'opération
 	public static final String OPERATION_PAR_DEFAUT = "";
@@ -43,10 +45,14 @@ public class Constantes {
 	// Chaines de caractères présentes dans l'IHM
 	public static final String PREFIXE_DERNIER_RESULTAT = "Last result";
 	
-	// Les locateurs des éléments manipulés par les tests
+	// Les locateurs des éléments manipulés par les tests sur le calculateur
 	public static final By CHAMP_NUMERO_A = new By.ByName("numbera");
 	public static final By CHAMP_NUMERO_B = new By.ByXPath(".//*[@*='Fill the number B']");
 	public static final By SELECT_OPERATION = new By.ById("operation");
 	public static final By VALIDER_FORMULAIRE_CALCUL = new By.ByXPath(".//form[@*='myCompute']//input[@*='submit']");
 	public static final By DERNIER_RESULTAT = new By.ByXPath(".//fieldset[1]//p");
+	
+	// Les locateurs des éléments manipulés par les tests sur le photomanager et de la zone 'trash'
+	public static final By PHOTOS = new By.ByXPath(".//html/body/div[1]/ul//img");
+	public static final By ZONE_TRASH = new By.ById("trash");
 }

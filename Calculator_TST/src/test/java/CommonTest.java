@@ -2,20 +2,16 @@ package test.java;
 
 import java.io.File;
 
-import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import org.junit.Assert;
 import main.constantes.Constantes;
-import main.outils.PropertiesOutil;
 
 /**
  * Fonctions communues utilisées par les différents tests.
@@ -29,144 +25,6 @@ public class CommonTest {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Ce test à pour objectif de vérifier si la saisie de données non numérique ou incorrectement formatée est bien gérée par l'application.
-	 * Si la chaine des valeur n'est pas correcte, on affiche "fill the numbers".
-	 * Si l'opération n'est pas selectionnée on affiche "fill the operation select please";
-	 * @throws Exception en cas d'erreur.
-	 */
-	@Test
-	public void saisiesTest() throws Exception {	
-
-		// Si l'emplacement du driver chrome est bon, alors on lance le navigateur
-		if (Constantes.EMPLACEMENT_CHROME_DRIVER == null) {
-			// Initialisation du driver et accès à la page
-			ChromeDriver driver =  (ChromeDriver) obtenirDriver(Constantes.USE_CHROME);
-			driver.get(Constantes.URL_PAGE);
-			
-			try {
-				///////////////////////////////////////////////////
-				// Cas aux limites
-				///////////////////////////////////////////////////
-				
-				// Pas de valorisation de l'opération
-				Assert.assertTrue("Ne pas renseigner l'opération : on attendait 'fill the operation select please'", saisieFormulaire(driver, "3", "4", null, "fill the operation select please"));
-				// Somme contenant une somme
-				Assert.assertTrue("Opérande B contenant un signe addition", saisieFormulaire(driver, "4", "5+3", Constantes.OPERATION_SOMME, "fill the numbers"));
-				// Somme avec des caractères interdits (ils sont ignorés)
-				Assert.assertTrue("Opérande A contenant des lettres", saisieFormulaire(driver, "3UNCHIFFR", "4", Constantes.OPERATION_SOMME, "Last result is : 7"));
-				// Somme avec un exposant mal écrit
-				Assert.assertTrue("Opérande A contenant des lettres", saisieFormulaire(driver, "3E", "4", Constantes.OPERATION_SOMME, "fill the numbers"));
-				// Valorisation de l'opération à la valeur par défaut -- Please select an operation --
-				Assert.assertTrue("Renseigner l'opération par défaut : on attendait 'fill the operation select please'", saisieFormulaire(driver, "3", "4", Constantes.OPERATION_PAR_DEFAUT, "fill the operation select please"));
-				// Somme avec un grand nombre de chiffres (ici on remarque qu'une troncature (due à la nature des doubles, à lieue)
-				Assert.assertTrue("Résultat disposant d'un nombre de chiffres très important", saisieFormulaire(driver, "0,123456789", "123456789123456789", Constantes.OPERATION_SOMME, "123456789123456789.123456789"));
-				
-
-			} catch (AssertionError err) {
-				System.out.println("Echec du test sur la vérification suivante : " + err.getMessage());
-				err.printStackTrace();
-				throw err;
-			}
-		} else {
-			System.out.println("Le fichier gecko ou chrome driver n'est pas disponible ou l'emplacement est mal définie dans les constantes");
-		}
-	}
-	
-	/**
-	 * Ce test à pour objectif de vérifier le bon fonctionnement de la somme.
-	 * @throws Exception en cas d'erreur.
-	 */
-	@Test
-	public void multiplicationTest() throws Exception {	
-		// Si l'emplacement du driver chrome est bon, alors on lance le navigateur
-		if (Constantes.EMPLACEMENT_CHROME_DRIVER == null) {
-			// Initialisation du driver et accès à la page
-			ChromeDriver driver =  (ChromeDriver) obtenirDriver(Constantes.USE_CHROME);
-			driver.get(Constantes.URL_PAGE);
-			
-			try {
-				///////////////////////////////////////////////////
-				// 1] Multiplication "Passantes" :
-				///////////////////////////////////////////////////
-				
-				// Avec nombre négatifs
-				Assert.assertTrue("Multiplication de nombres négatifs", saisieFormulaire(driver, "-2", "-500", Constantes.OPERATION_MULTIPLICATION));
-				// Avec un caractère "+"
-				Assert.assertTrue("Multiplication de nombres signés", saisieFormulaire(driver, "+123", "-154", Constantes.OPERATION_MULTIPLICATION));
-				// Avec des "."
-				Assert.assertTrue("Multiplication de nombres à virgules 1/2", saisieFormulaire(driver, "0.123456", "12345", Constantes.OPERATION_MULTIPLICATION));
-				// Avec des ","
-				Assert.assertTrue("Multiplication de nombres à virgules 2/2", saisieFormulaire(driver, "0,123456", "56779", Constantes.OPERATION_MULTIPLICATION));
-				
-				///////////////////////////////////////////////////
-				// 2] Cas aux limites
-				///////////////////////////////////////////////////
-				// Multiplication par 0
-				Assert.assertTrue("Multiplication par 0", saisieFormulaire(driver, "123", "0", Constantes.OPERATION_MULTIPLICATION));
-				// Multiplication de nombre avec Exposant
-				Assert.assertTrue("Multiplication avec exposant", saisieFormulaire(driver, "3E4", "6", Constantes.OPERATION_MULTIPLICATION));
-				// Multiplication avec un grand nombre de chiffres (ici on remarque qu'une troncature (due à la nature des doubles, à lieue)
-				Assert.assertTrue("Multiplication de nombreux long", saisieFormulaire(driver, "123", "123456789123456789", Constantes.OPERATION_MULTIPLICATION));
-				
-			} catch (AssertionError err) {
-				System.out.println("Echec du test sur la vérification suivante : " + err.getMessage());
-				err.printStackTrace();
-				throw err;
-			}
-		} else {
-			System.out.println("Le fichier gecko ou chrome driver n'est pas disponible ou l'emplacement est mal définie dans les constantes");
-		}
-	}
-	
-	/**
-	 * Ce test à pour objectif de vérifier le bon fonctionnement de la somme.
-	 * @throws Exception en cas d'erreur.
-	 */
-	@Test
-	public void divisionTest() throws Exception {	
-		// Si l'emplacement du driver chrome est bon, alors on lance le navigateur
-		if (Constantes.EMPLACEMENT_CHROME_DRIVER == null) {
-			// Initialisation du driver et accès à la page
-			ChromeDriver driver =  (ChromeDriver) obtenirDriver(Constantes.USE_CHROME);
-			driver.get(Constantes.URL_PAGE);
-			
-			try {
-				///////////////////////////////////////////////////
-				// 1] Cas standards
-				///////////////////////////////////////////////////
-				
-				// Avec nombre négatifs
-				Assert.assertTrue("Division de nombres négatifs", saisieFormulaire(driver, "-2", "-500", Constantes.OPERATION_DIVISION));
-				// Avec un caractère "+"
-				Assert.assertTrue("Division de nombres signés", saisieFormulaire(driver, "+123", "-154", Constantes.OPERATION_DIVISION));
-				// Avec des "."
-				Assert.assertTrue("Division de nombres à virgules 1/2", saisieFormulaire(driver, "10.50", "3.5", Constantes.OPERATION_DIVISION));
-				// Avec des ","
-				Assert.assertTrue("Division de nombres à virgules 2/2", saisieFormulaire(driver, "100,345", "10,5", Constantes.OPERATION_DIVISION));
-				
-				///////////////////////////////////////////////////
-				// 2] Cas aux limites
-				///////////////////////////////////////////////////
-				// Division par 0
-				Assert.assertTrue("Division par 0", saisieFormulaire(driver, "123", "0", Constantes.OPERATION_DIVISION, "divide by 0 is forbidden"));
-				// Division de 0
-				Assert.assertTrue("Division de 0", saisieFormulaire(driver, "0", "5", Constantes.OPERATION_DIVISION));
-				// Division de nombre avec Exposant
-				Assert.assertTrue("Division avec exposant", saisieFormulaire(driver, "3E4", "6", Constantes.OPERATION_DIVISION));
-				// Multiplication avec un grand nombre de chiffres (ici on remarque qu'une troncature (due à la nature des doubles, à lieue)
-				Assert.assertTrue("Division de nombreux long", saisieFormulaire(driver, "123", "123456789123456789", Constantes.OPERATION_DIVISION));
-				
-			} catch (AssertionError err) {
-				System.out.println("Echec du test sur la vérification suivante : " + err.getMessage());
-				err.printStackTrace();
-				throw err;
-			}
-		} else {
-			System.out.println("Le fichier gecko ou chrome driver n'est pas disponible ou l'emplacement est mal définie dans les constantes");
-		}
-	}
-	
 //	/**
 //	 * Ce test à pour objectif de vérifier le bon fonctionnement de la somme.
 //	 * @throws Exception en cas d'erreur.
@@ -316,11 +174,12 @@ public class CommonTest {
 			retour = new ChromeDriver(option);;
 		} else if (implementation == Constantes.USE_FIREFOX) {
 			//Configuration du driver pour pointer sur le bon binaire
-			FirefoxBinary ffBinary = new FirefoxBinary(new File(Constantes.EMPLACEMENT_FIREFOX));
-			FirefoxProfile profile = configurerProfilFirefox();
+			//FirefoxBinary ffBinary = new FirefoxBinary(new File(Constantes.EMPLACEMENT_FIREFOX));
+			//FirefoxProfile profile = configurerProfilFirefox();
 
 			// Initialisation du driver
-			retour = new FirefoxDriver(profile);
+			//retour = new FirefoxDriver(profile);
+			retour = new FirefoxDriver();
 		}
 
 		return retour;
